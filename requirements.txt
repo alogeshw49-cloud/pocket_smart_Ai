@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+sqlalchemy
+python-dotenv
+python-jose[cryptography]
+google-genai
+pillow
+pytest
+httpx
