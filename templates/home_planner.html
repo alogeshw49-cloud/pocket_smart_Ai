@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Home Interior & Renovation Planner - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div style="max-width: 840px; margin: 0 auto;">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <div class="hero-pill" style="margin-bottom: 1rem;">
+      <span>🛋️</span> Interior Architecture & Sourcing Engine
+    </div>
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.75rem;">AI Home Interior & Renovation Planner</h1>
+    <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+      Specify your room dimensions, preferred aesthetic, and total budget to receive an itemized, decorator-approved master plan.
+    </p>
+  </div>
+
+  <div class="glass-panel form-panel">
+    <form class="planner-form" data-planner-type="home" action="/planner/home" method="POST">
+      <!-- Budget Input & Slider -->
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <label class="form-label" for="budget" style="margin-bottom: 0;">Total Project Budget ($ USD)</label>
+          <span style="font-size: 0.85rem; color: #a5b4fc; font-weight: 600;">Flexible Allocation</span>
+        </div>
+        <input type="number" id="budget" name="budget" class="form-input" value="2500" min="100" max="250000" step="50" required>
+        <input type="range" id="budgetSlider" min="500" max="25000" step="100" value="2500" style="width: 100%; margin-top: 0.75rem; accent-color: var(--primary);">
+      </div>
+
+      <!-- Room Type & Aesthetic Style -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="room_type">Room Space</label>
+          <select id="room_type" name="room_type" class="form-select">
+            <option value="Living Room" selected>Living Room</option>
+            <option value="Primary Bedroom">Primary Bedroom</option>
+            <option value="Chef's Kitchen & Dining">Chef's Kitchen & Dining</option>
+            <option value="Executive Home Office">Executive Home Office</option>
+            <option value="Spa Bathroom">Spa Bathroom</option>
+            <option value="Studio Apartment">Studio Apartment</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="style">Design Aesthetic</label>
+          <select id="style" name="style" class="form-select">
+            <option value="Modern Minimalist" selected>Modern Minimalist</option>
+            <option value="Scandinavian Light">Scandinavian Light</option>
+            <option value="Warm Japandi">Warm Japandi</option>
+            <option value="Mid-Century Modern">Mid-Century Modern</option>
+            <option value="Industrial Raw Loft">Industrial Raw Loft</option>
+            <option value="Contemporary Luxury">Contemporary Luxury</option>
+            <option value="Bohemian Eclectic">Bohemian Eclectic</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Room Size & Priority -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="room_size_sqft">Room Size (Sq Ft)</label>
+          <input type="number" id="room_size_sqft" name="room_size_sqft" class="form-input" value="250" min="20" max="5000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="priority">Budget Priority Focus</label>
+          <select id="priority" name="priority" class="form-select">
+            <option value="Balanced" selected>Balanced Across All Categories</option>
+            <option value="Core Anchor Furniture">Anchor Furniture (Sofa/Bed)</option>
+            <option value="Lighting & Ambiance">Lighting & Architectural Fixtures</option>
+            <option value="Textiles & Rugs">Rugs, Drapery & Soft Textiles</option>
+            <option value="Wall Treatment & Art">Wall Art, Accents & Plants</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Additional Notes -->
+      <div class="form-group">
+        <label class="form-label" for="notes">Special Requirements / Existing Elements</label>
+        <textarea id="notes" name="notes" class="form-textarea" placeholder="e.g. Needs pet-friendly fabrics, already have dark walnut hardwood floors, south-facing natural lighting..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+        ⚜️ Generate Custom Interior Master Plan &rarr;
+      </button>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="ai-pulse-orb">🏛️</div>
+    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Cinzel', serif;">Synthesizing Interior Architecture</h3>
+    <p id="loadingStatus" style="color: var(--gold-light); font-weight: 600; min-height: 24px;">Analyzing room dimensions & color palette...</p>
+  </div>
+
+  <!-- Results Section -->
+  <div id="resultsContainer" class="results-container">
+    <div class="results-header">
+      <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-light); font-weight: 700; margin-bottom: 0.5rem;">
+        ⚜️ Master Architectural Blueprint & Sourcing Guide
+      </div>
+      <h2 id="resTitle" style="font-size: 2.2rem; margin-bottom: 0.75rem;">Design Concept Plan</h2>
+      <p id="resSummary" style="color: var(--white-muted); font-size: 1.05rem; line-height: 1.6; max-width: 750px;"></p>
+
+      <div class="metric-strip">
+        <div class="metric-box">
+          <div class="metric-label">Target Budget</div>
+          <div id="resTotalBudget" class="metric-value">$0.00</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Estimated Spend</div>
+          <div id="resEstimatedTotal" class="metric-value highlight">$0.00</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Contingency Buffer</div>
+          <div id="resSavingsBuffer" class="metric-value" style="color: var(--gold-light);">$0.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Cards -->
+    <h3 style="font-size: 1.5rem; margin-bottom: 1.25rem;">Category Allocation & Curated Items</h3>
+    <div id="categoriesGrid" class="categories-grid"></div>
+
+    <!-- AI Designer Tips -->
+    <div class="tips-box">
+      <div class="tips-title">
+        <span>💡</span> Pro Designer Tips & Budget Hacks
+      </div>
+      <ul id="aiTipsList" class="tips-list"></ul>
+    </div>
+
+    <!-- Implementation Roadmap -->
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2.5rem;">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Execution Roadmap & Sourcing Phases</h3>
+      <div id="timelineList"></div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <a id="viewDetailBtn" href="#" class="btn btn-secondary btn-lg" style="display: none;">
+        💾 View Saved Plan In Your History Archive &rarr;
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

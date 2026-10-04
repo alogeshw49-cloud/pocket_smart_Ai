@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div style="font-size: 0.9rem; color: #a5b4fc; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">Control Center</div>
+    <h1 style="font-size: 2.4rem;">Hello, {{ user.username }} 👋</h1>
+    <p style="color: var(--text-secondary); font-size: 1rem;">Manage your intelligent budget plans and lifestyle curations.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="/planner/home" class="btn btn-primary btn-sm">+ New Home Plan</a>
+    <a href="/planner/party" class="btn btn-secondary btn-sm">+ New Party Plan</a>
+    <a href="/planner/jewelry" class="btn btn-outline btn-sm">+ New Styling Plan</a>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="metric-strip" style="margin-bottom: 3rem;">
+  <div class="glass-panel metric-box">
+    <div class="metric-label">Total Saved Plans</div>
+    <div class="metric-value">{{ recent|length }}</div>
+  </div>
+  <div class="glass-panel metric-box">
+    <div class="metric-label">AI Engine</div>
+    <div class="metric-value highlight" style="font-size: 1.4rem;">Gemini 3.8</div>
+  </div>
+  <div class="glass-panel metric-box">
+    <div class="metric-label">Account Status</div>
+    <div class="metric-value" style="font-size: 1.4rem; color: #34d399;">Active Member</div>
+  </div>
+  <div class="glass-panel metric-box">
+    <div class="metric-label">Full History</div>
+    <div style="margin-top: 0.5rem;">
+      <a href="/history" style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">View All Plans &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- Planners Launch Strip -->
+<h2 style="font-size: 1.5rem; margin-bottom: 1.25rem;">Start a New Smart Plan</h2>
+<div class="planners-grid" style="margin: 0 0 3.5rem;">
+  <div class="glass-panel planner-card card-home" style="padding: 1.5rem;">
+    <div class="planner-icon icon-home" style="width: 44px; height: 44px; font-size: 1.4rem;">🛋️</div>
+    <h3 style="font-size: 1.25rem; margin-bottom: 0.35rem;">Home Interior</h3>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Room layout, anchor furniture, lighting & textiles.</p>
+    <a href="/planner/home" class="btn btn-primary btn-sm" style="align-self: flex-start;">Open Home &rarr;</a>
+  </div>
+
+  <div class="glass-panel planner-card card-party" style="padding: 1.5rem;">
+    <div class="planner-icon icon-party" style="width: 44px; height: 44px; font-size: 1.4rem;">🥂</div>
+    <h3 style="font-size: 1.25rem; margin-bottom: 0.35rem;">Party & Events</h3>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Catering, signature bar, table styling & playlist.</p>
+    <a href="/planner/party" class="btn btn-primary btn-sm" style="align-self: flex-start;">Open Party &rarr;</a>
+  </div>
+
+  <div class="glass-panel planner-card card-jewelry" style="padding: 1.5rem;">
+    <div class="planner-icon icon-jewelry" style="width: 44px; height: 44px; font-size: 1.4rem;">✨</div>
+    <h3 style="font-size: 1.25rem; margin-bottom: 0.35rem;">Jewelry & Styling</h3>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">Multimodal outfit analysis, metal pairing & gems.</p>
+    <a href="/planner/jewelry" class="btn btn-primary btn-sm" style="align-self: flex-start;">Open Jewelry &rarr;</a>
+  </div>
+</div>
+
+<!-- Recent Plans -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+  <h2 style="font-size: 1.5rem;">Recent Recommendations</h2>
+  {% if recent %}
+    <a href="/history" style="color: #a5b4fc; font-size: 0.9rem; font-weight: 600;">View History Archive &rarr;</a>
+  {% endif %}
+</div>
+
+{% if recent %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+    {% for row in recent %}
+      <div class="glass-panel" style="padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; padding: 3px 10px; border-radius: 50px; background: rgba(99, 102, 241, 0.15); color: #a5b4fc;">
+              {{ row.planner_type | upper }}
+            </span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">
+              {{ row.created_at.strftime('%b %d, %Y') if row.created_at else 'Recent' }}
+            </span>
+          </div>
+          <div style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Budget: ${{ "{:,.2f}".format(row.budget) }}
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Ref #{{ row.id }} &bull; Customized with algorithmic precision
+          </div>
+        </div>
+        <a href="/recommendation/{{ row.id }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+          View Full Plan Details &rarr;
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+    <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;">No Plans Generated Yet</h3>
+    <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+      Choose a planner above to create your first intelligent budget breakdown in seconds.
+    </p>
+    <a href="/planner/home" class="btn btn-primary">Create Your First Plan &rarr;</a>
+  </div>
+{% endif %}
+{% endblock %}

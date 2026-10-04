@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PocketSmart AI - Autonomous Budget & Lifestyle Planning{% endblock %}</title>
+  <meta name="description" content="AI-powered budget intelligence for home renovations, celebrations, and luxury styling with Gemini AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=3.0">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo-wrap">
+        <div class="logo-icon">⚜️</div>
+        <div class="logo-text">PocketSmart AI</div>
+        <span class="logo-badge">GOLD EDITION</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/planner/home" class="nav-link">🏛️ Interior</a>
+        <a href="/planner/party" class="nav-link">🍾 Celebration</a>
+        <a href="/planner/jewelry" class="nav-link">💎 Haute Jewelry</a>
+        {% if user %}
+          <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+          <a href="/history" class="nav-link">📜 Archive</a>
+        {% endif %}
+      </div>
+
+      <div class="nav-actions">
+        {% if user %}
+          <div class="user-pill">
+            <span class="user-avatar">{{ user.username[:1].upper() }}</span>
+            <span class="user-name" title="{{ user.email }}">{{ user.username }}</span>
+          </div>
+          <a href="/logout" class="btn btn-outline btn-sm">Log out</a>
+        {% else %}
+          <a href="/login" class="btn btn-outline btn-sm">Sign In</a>
+          <a href="/register" class="btn btn-primary btn-sm">Join</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Body Content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.25rem; color: var(--gold-primary);">⚜️</span>
+        <span style="font-weight: 700; color: #fff; font-family: 'Cinzel', serif;">PocketSmart AI</span>
+        <span>&copy; 2026 Autonomous Smart Financial & Lifestyle Operating System.</span>
+      </div>
+      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="/planner/home">Interior Design</a>
+        <a href="/planner/party">Event Planning</a>
+        <a href="/planner/jewelry">Jewelry Curation</a>
+        <a href="/api/health" target="_blank">System Health</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js?v=3.0"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}History Archive - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div style="font-size: 0.9rem; color: #a5b4fc; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">Saved Curations</div>
+    <h1 style="font-size: 2.2rem;">Plan History Archive</h1>
+    <p style="color: var(--text-secondary); font-size: 0.95rem;">Review and access all previously synthesized master plans.</p>
+  </div>
+  <div>
+    <a href="/dashboard" class="btn btn-secondary btn-sm">&larr; Back to Dashboard</a>
+  </div>
+</div>
+
+{% if rows %}
+  <div class="glass-panel" style="padding: 1.5rem;">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ref ID</th>
+            <th>Type</th>
+            <th>Budget</th>
+            <th>Created Date</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr>
+              <td>
+                <span style="font-weight: 700; color: #fff;">#{{ r.id }}</span>
+              </td>
+              <td>
+                {% if r.planner_type == 'home' %}
+                  <span style="padding: 3px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; background: rgba(59, 130, 246, 0.2); color: #93c5fd;">
+                    🏠 Home
+                  </span>
+                {% elif r.planner_type == 'party' %}
+                  <span style="padding: 3px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; background: rgba(236, 72, 153, 0.2); color: #f472b6;">
+                    🥂 Party
+                  </span>
+                {% else %}
+                  <span style="padding: 3px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+                    💎 Jewelry
+                  </span>
+                {% endif %}
+              </td>
+              <td>
+                <span style="font-weight: 600; color: #34d399;">
+                  ${{ "{:,.2f}".format(r.budget) }}
+                </span>
+              </td>
+              <td style="color: var(--text-secondary);">
+                {{ r.created_at.strftime('%b %d, %Y - %I:%M %p') if r.created_at else 'N/A' }}
+              </td>
+              <td style="text-align: right;">
+                <a href="/recommendation/{{ r.id }}" class="btn btn-primary btn-sm">
+                  View Full Plan &rarr;
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% else %}
+  <div class="glass-panel" style="text-align: center; padding: 4rem 2rem;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📜</div>
+    <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;">No History Available</h3>
+    <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+      You have not created any budget plans yet. Try out one of our planners to get started.
+    </p>
+    <a href="/planner/home" class="btn btn-primary">Start a Plan Now &rarr;</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}{{ result.title | default('Saved Plan') }} - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div style="max-width: 960px; margin: 0 auto;">
+  <!-- Detail Top Actions Bar -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <a href="/history" class="btn btn-secondary btn-sm">&larr; Back to History Archive</a>
+    <div style="display: flex; gap: 0.75rem;">
+      <button onclick="window.print()" class="btn btn-outline btn-sm">🖨️ Print / Save PDF</button>
+      <a href="/planner/{{ row.planner_type }}" class="btn btn-primary btn-sm">+ Create Another Plan</a>
+    </div>
+  </div>
+
+  <!-- Header Banner -->
+  <div class="results-header" style="{% if row.planner_type == 'home' %}background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);{% elif row.planner_type == 'party' %}background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(244, 63, 94, 0.1) 100%);{% else %}background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(225, 29, 72, 0.1) 100%);{% endif %}">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+      <span style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; padding: 4px 12px; border-radius: 50px; background: rgba(255, 255, 255, 0.1); color: #fff;">
+        {% if row.planner_type == 'home' %}🏠 Interior Architecture & Renovation{% elif row.planner_type == 'party' %}🥂 Event Production Blueprint{% else %}💎 Haute Joaillerie Curation{% endif %}
+      </span>
+      <span style="font-size: 0.85rem; color: var(--text-secondary);">
+        Saved on {{ row.created_at.strftime('%B %d, %Y') if row.created_at else 'Recent' }} &bull; Plan #{{ row.id }}
+      </span>
+    </div>
+
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.75rem;">{{ result.title | default('Intelligent Master Plan') }}</h1>
+    <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; max-width: 800px;">
+      {{ result.summary | default('') }}
+    </p>
+
+    <!-- Metrics -->
+    <div class="metric-strip">
+      <div class="metric-box">
+        <div class="metric-label">Allocated Budget</div>
+        <div class="metric-value">${{ "{:,.2f}".format(result.total_budget | default(row.budget)) }}</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Estimated Total</div>
+        <div class="metric-value highlight">${{ "{:,.2f}".format(result.estimated_total | default(row.budget)) }}</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Contingency Buffer</div>
+        <div class="metric-value" style="color: #60a5fa;">${{ "{:,.2f}".format(result.savings_buffer | default(0)) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jewelry Specific Details if applicable -->
+  {% if row.planner_type == 'jewelry' and (result.metal_recommendation or result.outfit_analysis) %}
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
+      <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem;">✨ Stylist Harmony Report</h3>
+      <div class="metric-strip" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 0;">
+        <div class="metric-box">
+          <div class="metric-label">Recommended Metal</div>
+          <div style="font-size: 1.15rem; font-weight: 700; color: #fbbf24; margin-top: 0.25rem;">
+            {{ result.metal_recommendation | default('Warm Gold Vermeil / 14k') }}
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Gemstones & Finish</div>
+          <div style="font-size: 1.15rem; font-weight: 700; color: #a5b4fc; margin-top: 0.25rem;">
+            {{ result.gemstone_or_finish | default('Cultured Freshwater Pearls & Solitaires') }}
+          </div>
+        </div>
+      </div>
+
+      {% if result.outfit_analysis %}
+        <div style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.02); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.35rem; color: #fff;">Garment Color & Silhouette Analysis:</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">{{ result.outfit_analysis }}</div>
+        </div>
+      {% endif %}
+
+      {% if result.styling_verdict %}
+        <div style="margin-top: 1rem; background: rgba(245, 158, 11, 0.08); padding: 1rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(245, 158, 11, 0.25);">
+          <span style="font-weight: 700; color: #fbbf24;">Stylist's Golden Rule: </span>
+          <span style="color: #f8fafc; font-size: 0.95rem;">{{ result.styling_verdict }}</span>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- Categories & Items -->
+  <h2 style="font-size: 1.6rem; margin-bottom: 1.25rem;">Category Allocation & Curated Breakdown</h2>
+  <div class="categories-grid">
+    {% for cat in result.categories | default([]) %}
+      <div class="glass-panel category-card">
+        <div class="category-header">
+          <div class="category-name">{{ cat.name }}</div>
+          <div class="category-badge">${{ "{:,.2f}".format(cat.allocated_budget | default(0)) }} ({{ cat.percentage | default(0) }}%)</div>
+        </div>
+        <div class="item-list">
+          {% for item in cat['items'] %}
+            <div class="item-card">
+              <div class="item-row">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-price">${{ "{:,.2f}".format(item.estimated_cost | default(0)) }}</span>
+              </div>
+              <div class="item-desc">{{ item.description }}</div>
+              {% if item.smart_tip %}
+                <div class="item-tip">
+                  <span>💡</span> <span>{{ item.smart_tip }}</span>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- AI Tips -->
+  {% if result.ai_tips %}
+    <div class="tips-box">
+      <div class="tips-title">
+        <span>💡</span> Strategic Insights & Money-Saving Dupe Advice
+      </div>
+      <ul class="tips-list">
+        {% for tip in result.ai_tips %}
+          <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- Execution Timeline / Phases -->
+  {% if result.timeline_or_phases %}
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 3rem;">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Execution Roadmap & Step-by-Step Phases</h3>
+      <div>
+        {% for phase in result.timeline_or_phases %}
+          <div class="item-card" style="margin-bottom: 0.75rem;">
+            <span style="color: #a5b4fc; font-weight: 700; margin-right: 0.5rem;">{{ loop.index }}.</span>
+            <span>{{ phase }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

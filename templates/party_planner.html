@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Party & Event Budget Planner - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div style="max-width: 840px; margin: 0 auto;">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <div class="hero-pill" style="margin-bottom: 1rem;">
+      <span>🥂</span> Event Production & Atmosphere Engineering
+    </div>
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.75rem;">AI Party & Event Budget Planner</h1>
+    <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+      Scale per-guest catering, batch cocktails, ambiance lighting, and music sequencing within your exact financial boundary.
+    </p>
+  </div>
+
+  <div class="glass-panel form-panel">
+    <form class="planner-form" data-planner-type="party" action="/planner/party" method="POST">
+      <!-- Budget Input & Slider -->
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <label class="form-label" for="budget" style="margin-bottom: 0;">Total Event Budget ($ USD)</label>
+          <span style="font-size: 0.85rem; color: #f472b6; font-weight: 600;">Full Production Pool</span>
+        </div>
+        <input type="number" id="budget" name="budget" class="form-input" value="1200" min="50" max="100000" step="25" required>
+        <input type="range" id="budgetSlider" min="200" max="10000" step="50" value="1200" style="width: 100%; margin-top: 0.75rem; accent-color: var(--accent-pink);">
+      </div>
+
+      <!-- Event Type & Guest Count -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="event_type">Event Type</label>
+          <select id="event_type" name="event_type" class="form-select">
+            <option value="Birthday Celebration" selected>Birthday Celebration</option>
+            <option value="Cocktail & Tapas Soirée">Cocktail & Tapas Soirée</option>
+            <option value="Milestone Anniversary">Milestone Anniversary</option>
+            <option value="Intimate Dinner Party">Intimate Dinner Party</option>
+            <option value="Backyard BBQ & Garden Party">Backyard BBQ & Garden Party</option>
+            <option value="Bridal / Baby Shower">Bridal / Baby Shower</option>
+            <option value="Housewarming Mixer">Housewarming Mixer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="guest_count">Guest Count</label>
+          <input type="number" id="guest_count" name="guest_count" class="form-input" value="20" min="2" max="500" required>
+        </div>
+      </div>
+
+      <!-- Theme & Venue Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="theme">Aesthetic Theme / Vibe</label>
+          <select id="theme" name="theme" class="form-select">
+            <option value="Casual Elegance" selected>Casual Elegance</option>
+            <option value="Moody Candlelit Lounge">Moody Candlelit Lounge</option>
+            <option value="Mediterranean Sunset">Mediterranean Sunset</option>
+            <option value="Golden Hour Glam">Golden Hour Glam</option>
+            <option value="Rustic Vineyard">Rustic Vineyard</option>
+            <option value="Retro Disco Chic">Retro Disco Chic</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="venue_type">Venue Setting</label>
+          <select id="venue_type" name="venue_type" class="form-select">
+            <option value="Home / Living Space" selected>Home / Living Space</option>
+            <option value="Backyard / Garden Patio">Backyard / Garden Patio</option>
+            <option value="Rented Event Loft / Studio">Rented Event Loft / Studio</option>
+            <option value="Rooftop Deck">Rooftop Deck</option>
+            <option value="Public Park / Pavilion">Public Park / Pavilion</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Priority & Special Notes -->
+      <div class="form-group">
+        <label class="form-label" for="priority">Main Budget Focus</label>
+        <select id="priority" name="priority" class="form-select">
+          <option value="Food & Drinks" selected>Food, Grazing & Drinks Bar</option>
+          <option value="Decor & Ambiance">Decor, Florals & Candle Ambiance</option>
+          <option value="Guest Experience & Audio">Guest Experience, Music & Entertainment</option>
+          <option value="Balanced Distribution">Evenly Distributed Across All Sectors</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="notes">Special Considerations & Notes</label>
+        <textarea id="notes" name="notes" class="form-textarea" placeholder="e.g. 4 vegetarian guests, signature drink should feature gin, outdoor lighting required after sunset..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+        ⚜️ Curate Celebration & Event Budget &rarr;
+      </button>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="ai-pulse-orb">🍾</div>
+    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Cinzel', serif;">Orchestrating Event Production</h3>
+    <p id="loadingStatus" style="color: var(--gold-light); font-weight: 600; min-height: 24px;">Calculating per-guest catering thresholds...</p>
+  </div>
+
+  <!-- Results Section -->
+  <div id="resultsContainer" class="results-container">
+    <div class="results-header">
+      <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-light); font-weight: 700; margin-bottom: 0.5rem;">
+        ⚜️ Event Master Blueprint & Hospitality Plan
+      </div>
+      <h2 id="resTitle" style="font-size: 2.2rem; margin-bottom: 0.75rem;">Event Production Concept</h2>
+      <p id="resSummary" style="color: var(--white-muted); font-size: 1.05rem; line-height: 1.6; max-width: 750px;"></p>
+
+      <div class="metric-strip">
+        <div class="metric-box">
+          <div class="metric-label">Target Budget</div>
+          <div id="resTotalBudget" class="metric-value">$0.00</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Estimated Spend</div>
+          <div id="resEstimatedTotal" class="metric-value highlight">$0.00</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Contingency Buffer</div>
+          <div id="resSavingsBuffer" class="metric-value" style="color: var(--gold-light);">$0.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Cards -->
+    <h3 style="font-size: 1.5rem; margin-bottom: 1.25rem;">Curated Event Allocations</h3>
+    <div id="categoriesGrid" class="categories-grid"></div>
+
+    <!-- AI Event Hacks -->
+    <div class="tips-box" style="background: rgba(236, 72, 153, 0.05); border-color: rgba(236, 72, 153, 0.25);">
+      <div class="tips-title" style="color: #f472b6;">
+        <span>🍸</span> Sommelier & Event Planner Insider Hacks
+      </div>
+      <ul id="aiTipsList" class="tips-list"></ul>
+    </div>
+
+    <!-- Timeline Roadmap -->
+    <div class="glass-panel" style="padding: 2rem; margin-bottom: 2.5rem;">
+      <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Host Preparation Timeline</h3>
+      <div id="timelineList"></div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <a id="viewDetailBtn" href="#" class="btn btn-secondary btn-lg" style="display: none;">
+        💾 View Saved Plan In Your History Archive &rarr;
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

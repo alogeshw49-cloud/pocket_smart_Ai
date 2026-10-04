@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}PocketSmart AI - AI-Powered Budget & Lifestyle Planning{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-pill">
+    <span>⚡</span> Powered by Gemini 3.8 Neural Intelligence
+  </div>
+  <h1 class="hero-title">
+    Maximize Every Dollar.<br>
+    <span>Plan Smarter With AI.</span>
+  </h1>
+  <p class="hero-subtitle">
+    From dream home makeovers to unforgettable celebrations and red-carpet jewelry styling—PocketSmart AI crafts itemized, budget-optimized master plans in seconds.
+  </p>
+  <div class="hero-cta">
+    <a href="/planner/home" class="btn btn-primary btn-lg">🏠 Launch Home Planner</a>
+    <a href="/planner/party" class="btn btn-secondary btn-lg">🎉 Launch Party Planner</a>
+    <a href="/planner/jewelry" class="btn btn-outline btn-lg">💎 Launch Jewelry Stylist</a>
+  </div>
+</section>
+
+<!-- Planners Showcase Grid -->
+<div class="planners-grid">
+  <!-- Home Planner Card -->
+  <div class="glass-panel planner-card card-home">
+    <div>
+      <div class="planner-icon icon-home">🛋️</div>
+      <h3 class="planner-title">Home Interior & Renovation</h3>
+      <p class="planner-desc">
+        Transform living rooms, kitchens, or full apartments. Get tailored layouts, aesthetic palettes, furniture selections, and smart sourcing advice.
+      </p>
+      <div class="planner-tags">
+        <span class="tag">Living Rooms</span>
+        <span class="tag">Kitchens</span>
+        <span class="tag">Modern Minimalist</span>
+        <span class="tag">Lighting Ambiance</span>
+      </div>
+    </div>
+    <a href="/planner/home" class="btn btn-primary">Start Home Plan &rarr;</a>
+  </div>
+
+  <!-- Party Planner Card -->
+  <div class="glass-panel planner-card card-party">
+    <div>
+      <div class="planner-icon icon-party">🥂</div>
+      <h3 class="planner-title">Party & Event Budgeting</h3>
+      <p class="planner-desc">
+        Calculate per-guest catering, signature batch bars, balloon/floral styling, and dynamic evening playlists designed to make every dollar count.
+      </p>
+      <div class="planner-tags">
+        <span class="tag">Birthdays</span>
+        <span class="tag">Cocktail Soirées</span>
+        <span class="tag">Mezze & Charcuterie</span>
+        <span class="tag">Bar Batching</span>
+      </div>
+    </div>
+    <a href="/planner/party" class="btn btn-primary">Start Party Plan &rarr;</a>
+  </div>
+
+  <!-- Jewelry Planner Card -->
+  <div class="glass-panel planner-card card-jewelry">
+    <div>
+      <div class="planner-icon icon-jewelry">✨</div>
+      <h3 class="planner-title">Jewelry & Outfit Styling</h3>
+      <p class="planner-desc">
+        Upload a picture of your outfit or describe your dress. Our AI identifies color harmonies, precious metals, and curates red-carpet pieces.
+      </p>
+      <div class="planner-tags">
+        <span class="tag">Outfit Photo AI</span>
+        <span class="tag">Weddings & Galas</span>
+        <span class="tag">Gold Vermeil & Pearls</span>
+        <span class="tag">Neckline Harmony</span>
+      </div>
+    </div>
+    <a href="/planner/jewelry" class="btn btn-primary">Start Jewelry Plan &rarr;</a>
+  </div>
+</div>
+
+<!-- Features Strip -->
+<div class="glass-panel" style="padding: 3rem 2.5rem; margin-top: 3rem;">
+  <div style="text-align: center; max-width: 600px; margin: 0 auto 2.5rem;">
+    <h2 style="font-size: 2rem; margin-bottom: 0.75rem;">Why PocketSmart AI Outperforms Traditional Budgeting</h2>
+    <p style="color: var(--text-secondary); font-size: 0.95rem;">Designed from the ground up for zero-overspend precision and aesthetic delight.</p>
+  </div>
+  <div class="metric-strip" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+    <div class="metric-box">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+      <div style="font-weight: 700; margin-bottom: 0.25rem;">Algorithmic Guardrails</div>
+      <div style="font-size: 0.85rem; color: var(--text-secondary);">Calculates 5-10% contingency buffers automatically so you never exceed your ceiling.</div>
+    </div>
+    <div class="metric-box">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+      <div style="font-weight: 700; margin-bottom: 0.25rem;">Multimodal Vision</div>
+      <div style="font-size: 0.85rem; color: var(--text-secondary);">Gemini 3.8 Flash inspects fabric color, cuts, and silhouettes for tailored styling advice.</div>
+    </div>
+    <div class="metric-box">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🛍️</div>
+      <div style="font-weight: 700; margin-bottom: 0.25rem;">Smart Dupe Tips</div>
+      <div style="font-size: 0.85rem; color: var(--text-secondary);">Uncovers cost-effective materials, wholesale hacks, and thrifting advice for luxury aesthetics.</div>
+    </div>
+    <div class="metric-box">
+      <div style="font-size: 2rem; margin-bottom: 0.5rem;">💾</div>
+      <div style="font-weight: 700; margin-bottom: 0.25rem;">History & Evolution</div>
+      <div style="font-size: 0.85rem; color: var(--text-secondary);">Save, compare, and review all previous plans in your personal dashboard at any time.</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
